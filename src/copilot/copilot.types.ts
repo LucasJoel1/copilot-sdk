@@ -28,3 +28,8 @@ export interface CopilotTokenInfo {
     access: string,
     expires: number
 }
+
+export interface CopilotRefreshTokenInfo extends CopilotTokenInfo {
+    isLoggedIn: boolean,
+    baseURL: string
+}

@@ -1,5 +1,5 @@
 import { COPILOT_HEADERS, CLIENT_ID } from "../globals";
-import type { CopilotTokenInfo, DeviceTokenErrorResponse, DeviceTokenSuccessResponse, GithubAuthResponse, GithubCopilotToken } from "./copilot.types"
+import type { CopilotTokenInfo, DeviceTokenErrorResponse, DeviceTokenSuccessResponse, GithubAuthResponse, GithubCopilotToken, CopilotRefreshTokenInfo } from "./copilot.types"
 
 /**
  * @brief Base class for interfacing with the Copilot SDK
@@ -90,7 +90,6 @@ export class Copilot {
 
             if (raw && typeof raw === "object" && typeof (raw as DeviceTokenSuccessResponse).access_token === "string") {
                 this.refreshToken = (raw as DeviceTokenSuccessResponse).access_token
-
                 const domain = "https://api.github.com/copilot_internal/v2/token";
 
                 const tokenRes = await fetch(domain, {
@@ -157,6 +156,22 @@ export class Copilot {
         }
     }
 
+    public SetRefreshCallback(callback: (tokenInfo: CopilotRefreshTokenInfo) => any) {
+        this.refreshCallback = callback({ access: this.copilotAuthKey, expires: this.expiration, refresh: this.refreshToken, baseURL: this.baseURL, isLoggedIn: this.isLoggedIn })
+    }
+
+    public RefreshToken() {
+        if (this.refreshCallback) {
+            this.refreshCallback({
+                access: this.copilotAuthKey,
+                expires: this.expiration,
+                refresh: this.refreshToken,
+                baseURL: this.baseURL,
+                isLoggedIn: this.isLoggedIn
+            });
+        }
+    }
+
     private sleep(ms: number) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
@@ -177,4 +192,5 @@ export class Copilot {
     private currAuthResponse: GithubAuthResponse | undefined;
     private baseURL: string = "";
     private isLoggedIn: boolean = false;
+    private refreshCallback: ((tokenInfo: CopilotRefreshTokenInfo) => any) | undefined;
 }
