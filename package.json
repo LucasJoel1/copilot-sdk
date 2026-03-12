@@ -28,5 +28,8 @@
     "repository": {
         "type": "git",
         "url": "https://github.com/LucasJoel1/copilot-sdk.git"
-    }
+    },
+    "files": [
+        "dist"
+    ]
 }

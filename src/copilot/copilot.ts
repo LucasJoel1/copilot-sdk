@@ -90,37 +90,7 @@ export class Copilot {
 
             if (raw && typeof raw === "object" && typeof (raw as DeviceTokenSuccessResponse).access_token === "string") {
                 this.refreshToken = (raw as DeviceTokenSuccessResponse).access_token
-                const domain = "https://api.github.com/copilot_internal/v2/token";
-
-                const tokenRes = await fetch(domain, {
-                    headers: {
-                        Accept: "application/json",
-                        Authorization: `Bearer ${this.refreshToken}`,
-                        ...COPILOT_HEADERS
-                    },
-                });
-
-                if (!tokenRes || typeof tokenRes !== 'object') {
-                    throw new Error("Invalid github token");
-                }
-
-                const data = await tokenRes.json();
-
-                const token = (data as GithubCopilotToken).token;
-                const expiresAt = (data as GithubCopilotToken).expires_at;
-               	if (typeof token !== "string" || typeof expiresAt !== "number") {
-                    throw new Error("Invalid Copilot token response fields");
-                }
-
-                this.copilotAuthKey = token;
-                this.expiration = (expiresAt * 1000) - (300 * 1000)
-                this.isLoggedIn = true;
-                this.GenerateGithubBaseURL()
-                return {
-                    refresh: this.refreshToken,
-                    access: this.copilotAuthKey,
-                    expires: this.expiration
-                }
+                return await this.GetGithubCopilotToken();
             }
 
       		if (raw && typeof raw === "object" && typeof (raw as DeviceTokenErrorResponse).error === "string") {
@@ -160,7 +130,11 @@ export class Copilot {
         this.refreshCallback = callback({ access: this.copilotAuthKey, expires: this.expiration, refresh: this.refreshToken, baseURL: this.baseURL, isLoggedIn: this.isLoggedIn })
     }
 
-    public RefreshToken() {
+    public async RefreshTokenIfNeeded(force?: boolean) {
+        if (!force) {
+            if (this.expiration > Date.now()) return;
+        }
+        await this.GetGithubCopilotToken();
         if (this.refreshCallback) {
             this.refreshCallback({
                 access: this.copilotAuthKey,
@@ -169,6 +143,40 @@ export class Copilot {
                 baseURL: this.baseURL,
                 isLoggedIn: this.isLoggedIn
             });
+        }
+    }
+
+    private async GetGithubCopilotToken() {
+        const domain = "https://api.github.com/copilot_internal/v2/token";
+
+        const tokenRes = await fetch(domain, {
+            headers: {
+                Accept: "application/json",
+                Authorization: `Bearer ${this.refreshToken}`,
+                ...COPILOT_HEADERS
+            },
+        });
+
+        if (!tokenRes || typeof tokenRes !== 'object') {
+            throw new Error("Invalid github token");
+        }
+
+        const data = await tokenRes.json();
+
+        const token = (data as GithubCopilotToken).token;
+        const expiresAt = (data as GithubCopilotToken).expires_at;
+       	if (typeof token !== "string" || typeof expiresAt !== "number") {
+            throw new Error("Invalid Copilot token response fields");
+        }
+
+        this.copilotAuthKey = token;
+        this.expiration = (expiresAt * 1000) - (300 * 1000)
+        this.isLoggedIn = true;
+        this.GenerateGithubBaseURL()
+        return {
+            refresh: this.refreshToken,
+            access: this.copilotAuthKey,
+            expires: this.expiration
         }
     }
 
