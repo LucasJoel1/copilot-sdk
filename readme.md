@@ -9,7 +9,7 @@ The Copilot SDK is an sdk written in javascript for nodejs projects allowing use
 ## Installation
 The sdk can be installed to you project using npm or an npm based package manager.  Installation through `npm` can be done with the following command
 
-`npm install copilot-sdk`
+`npm install @lucasjoel1/copilot-sdk`
 
 ## Usage
 Interfacing with the sdk happens through 2 classes, the `Copilot` class and the `Agent` class by creating instance(s) of these classes. **So far only the Copilot class has been implemented for authentication but the `Agent` class is currently being worked on and will be released at 1.0.0 along with other core features**
