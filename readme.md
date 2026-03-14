@@ -19,7 +19,7 @@ Interfacing with the sdk happens through 2 classes, the `Copilot` class and the 
 You can use the copilot class as such
 
 ```ts
-import { Copilot } from "copilot-sdk"
+import { Copilot } from "@lucasjoel1/copilot-sdk"
 
 // create new instance of copilot, each instance holds 1 api key/token
 // create multiple instances to have multiple users logged in 
