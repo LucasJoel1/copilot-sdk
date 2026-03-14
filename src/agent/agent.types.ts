@@ -1,8 +1,8 @@
 export type MessageRole = 'user' | 'assistant' | 'system' | 'tool'
 
 export interface BaseMessage {
-    id: string;
-    timestamp: number;
+    id?: string;
+    timestamp?: number;
     role: MessageRole;
     content?: string;
     metaData?: Record<string, any>

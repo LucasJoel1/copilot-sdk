@@ -127,7 +127,7 @@ export class Copilot {
     }
 
     public SetRefreshCallback(callback: (tokenInfo: CopilotRefreshTokenInfo) => any) {
-        this.refreshCallback = callback({ access: this.copilotAuthKey, expires: this.expiration, refresh: this.refreshToken, baseURL: this.baseURL, isLoggedIn: this.isLoggedIn })
+        this.refreshCallback = () => callback({ access: this.copilotAuthKey, expires: this.expiration, refresh: this.refreshToken, baseURL: this.baseURL, isLoggedIn: this.isLoggedIn })
     }
 
     public async RefreshTokenIfNeeded(force?: boolean) {

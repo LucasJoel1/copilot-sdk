@@ -9,7 +9,11 @@ The Copilot SDK is an sdk written in javascript for nodejs projects allowing use
 ## Installation
 The sdk can be installed to you project using npm or an npm based package manager.  Installation through `npm` can be done with the following command
 
+<<<<<<< Updated upstream
 `npm install @lucasjoel1/copilot-sdk`
+=======
+`npm install copilot-sdk`
+>>>>>>> Stashed changes
 
 ## Usage
 Interfacing with the sdk happens through 2 classes, the `Copilot` class and the `Agent` class by creating instance(s) of these classes. **So far only the Copilot class has been implemented for authentication but the `Agent` class is currently being worked on and will be released at 1.0.0 along with other core features**
@@ -19,7 +23,11 @@ Interfacing with the sdk happens through 2 classes, the `Copilot` class and the 
 You can use the copilot class as such
 
 ```ts
+<<<<<<< Updated upstream
 import { Copilot } from "@lucasjoel1/copilot-sdk"
+=======
+import { Copilot } from "copilot-sdk"
+>>>>>>> Stashed changes
 
 // create new instance of copilot, each instance holds 1 api key/token
 // create multiple instances to have multiple users logged in 
@@ -58,6 +66,9 @@ console.log(ai.GetCopilotAuth())
 ```
 
 Realistically the only function you need output from is the `GithubLogin()` function as that gives you the code and url for login, the other two are just in case the user wants to further extend the sdk beyond its capabilities or access an endpoint that is not currently covered by the sdk
+<<<<<<< Updated upstream
 
 ### Agent Class
 COMING SOON
+=======
+>>>>>>> Stashed changes
